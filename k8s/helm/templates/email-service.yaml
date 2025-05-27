@@ -1,0 +1,12 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-email
+spec:
+  selector:
+    app: email
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888

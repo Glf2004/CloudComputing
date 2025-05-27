@@ -1,0 +1,8 @@
+apiVersion: v2
+name: gomall-chart
+description: My Lab Helm Chart
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+- name: helium

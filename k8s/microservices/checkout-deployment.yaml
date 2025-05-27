@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkout
+  template:
+    metadata:
+      labels:
+        app: checkout
+    spec:
+      containers:
+      - name: checkout
+        image: huajuan6848/checkout:lab2
+        workingDir: /app
+        ports:
+        - containerPort: 8884
+        volumeMounts:
+        - name: checkout-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml
+      volumes:
+      - name: checkout-config-volume
+        configMap:
+          name: checkout-config

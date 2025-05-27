@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: huajuan6848/frontend:lab2  # 这里是你提供的镜像
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: frontend-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml
+      volumes:
+      - name: frontend-config-volume
+        configMap:
+          name: frontend-config

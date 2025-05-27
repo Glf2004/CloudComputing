@@ -1,0 +1,12 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-checkout
+spec:
+  selector:
+    app: checkout
+  ports:
+    - protocol: TCP
+      port: 8884
+      targetPort: 8884

@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-order
+  namespace: default
+spec:
+  replicas: {{.Values.microservices.replicas}}
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+      - name: order
+        image: huajuan6848/order:lab2
+        workingDir: /app
+        ports:
+        - containerPort: 8885
+        volumeMounts:
+        - name: order-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml
+      volumes:
+      - name: order-config-volume
+        configMap:
+          name: order-config

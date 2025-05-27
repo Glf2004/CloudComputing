@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+      - name: payment
+        image: huajuan6848/payment:lab2
+        workingDir: /app
+        ports:
+        - containerPort: 8886
+        volumeMounts:
+        - name: payment-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml
+      volumes:
+      - name: payment-config-volume
+        configMap:
+          name: payment-config

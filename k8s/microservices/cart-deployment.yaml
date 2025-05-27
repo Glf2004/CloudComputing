@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+spec:
+  replicas: 1  # 你可以根据需要调整副本数
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+      - name: cart
+        image: huajuan6848/cart:lab2  # 这里是你提供的镜像
+        workingDir: /app
+        ports:
+        - containerPort: 8883
+        volumeMounts:
+        - name: cart-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml  # 将配置文件挂载到容器的 /app/conf 路径
+      volumes:
+      - name: cart-config-volume
+        configMap:
+          name: cart-config  # 使用上面创建的 ConfigMap

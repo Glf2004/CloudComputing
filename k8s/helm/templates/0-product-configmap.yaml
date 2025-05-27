@@ -1,0 +1,36 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-product-config
+  namespace: default
+data:
+  conf.yaml: |
+    kitex:
+      service: "product"
+      address: ":8881"
+      metrics_port: ":9991"
+      log_level: info
+      log_file_name: "log/kitex.log"
+      log_max_size: 10
+      log_max_age: 3
+      log_max_backups: 50
+
+    mysql:
+      dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+      username: {{ .Values.externalServices.mysql.username | quote }}
+      password: {{ .Values.externalServices.mysql.password | quote }}
+      address: {{ .Values.externalServices.mysql.host | quote }}
+      port: {{ .Values.externalServices.mysql.port }}
+      database: product
+
+    redis:
+      address: "{{ .Values.externalServices.redis.host }}:{{ .Values.externalServices.redis.port }}"
+      username: {{ .Values.externalServices.redis.username | quote }}
+      password: {{ .Values.externalServices.redis.password | quote }}
+      db: {{ .Values.externalServices.redis.db }}
+
+    rate_limiter:
+      enabled: true
+      bucket_size: 3
+      rate: 3

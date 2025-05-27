@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-product
+  namespace: default
+spec:
+  replicas: {{.Values.microservices.replicas}}
+  selector:
+    matchLabels:
+      app: product
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+      - name: product
+        image: huajuan6848/product:lab2
+        workingDir: /app
+        ports:
+        - containerPort: 8881
+        volumeMounts:
+        - name: product-config-volume
+          mountPath: /app/conf/dev/conf.yaml
+          subPath: conf.yaml
+      volumes:
+      - name: product-config-volume
+        configMap:
+          name: product-config
