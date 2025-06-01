@@ -21,6 +21,13 @@ spec:
         - name: frontend-config-volume
           mountPath: /app/conf/dev/conf.yaml
           subPath: conf.yaml
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
       volumes:
       - name: frontend-config-volume
         configMap:

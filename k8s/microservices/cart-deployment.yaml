@@ -22,6 +22,13 @@ spec:
         - name: cart-config-volume
           mountPath: /app/conf/dev/conf.yaml
           subPath: conf.yaml  # 将配置文件挂载到容器的 /app/conf 路径
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
       volumes:
       - name: cart-config-volume
         configMap:
