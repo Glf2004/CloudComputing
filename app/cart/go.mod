@@ -13,8 +13,10 @@ require (
 	github.com/cloudwego/biz-demo/gomall/utils v0.0.0-00010101000000-000000000000
 	github.com/cloudwego/kitex v0.12.3
 	github.com/joho/godotenv v1.5.1
+	github.com/kitex-contrib/registry-etcd v0.2.1
 	github.com/kr/pretty v0.3.1
 	github.com/redis/go-redis/v9 v9.3.1
+	go.etcd.io/etcd/client/v3 v3.5.12
 	golang.org/x/time v0.10.0
 	gopkg.in/validator.v2 v2.0.1
 	gopkg.in/yaml.v2 v2.4.0

@@ -1,5 +1,5 @@
 kitex:
-  service: "cart"
+  service: "cart-service"
   address: ":8883"
   metrics_port: ":9993"
   log_level: info
@@ -12,7 +12,7 @@ mysql:
   dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
   username: root
   password: rootpass
-  address: mysql
+  address: mysql.default.svc.cluster.local
   port: 3306
   database: cart
 
@@ -20,3 +20,14 @@ rate_limiter:
   enabled: true
   bucket_size: 10
   rate: 7
+
+registry:
+  etcd:
+    address:
+      - "etcd.default.svc.cluster.local:2379"
+    ttl: 60
+    username: ""
+    password: ""
+
+product_service:
+  address: "product.default.svc.cluster.local:8881"

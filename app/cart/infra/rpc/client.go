@@ -20,7 +20,6 @@ import (
 	"github.com/cloudwego/biz-demo/gomall/app/cart/conf"
 	cartutils "github.com/cloudwego/biz-demo/gomall/app/cart/utils"
 	"github.com/cloudwego/biz-demo/gomall/rpc_gen/kitex_gen/product/productcatalogservice"
-	ou "github.com/cloudwego/biz-demo/gomall/utils"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/transmeta"
@@ -44,7 +43,7 @@ func initProductClient() {
 		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}),
 		client.WithTransportProtocol(transport.GRPC),
 		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-		ou.MyWithHostPorts(ou.ProductHostPorts...),
+		client.WithHostPorts(conf.GetConf().ProductService.Address),
 	)
 	var err error
 

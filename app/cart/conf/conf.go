@@ -15,6 +15,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -30,12 +31,29 @@ var (
 	once sync.Once
 )
 
+type ProductService struct {
+	Address string `yaml:"address"`
+}
+
 type Config struct {
-	Env         string
-	Kitex       Kitex       `yaml:"kitex"`
-	MySQL       MySQL       `yaml:"mysql"`
-	Redis       Redis       `yaml:"redis"`
-	RateLimiter RateLimiter `yaml:"rate_limiter"`
+	Env          string
+	Kitex        Kitex        `yaml:"kitex"`
+	MySQL        MySQL        `yaml:"mysql"`
+	Redis        Redis        `yaml:"redis"`
+	RateLimiter  RateLimiter  `yaml:"rate_limiter"`
+	Registry     Registry     `yaml:"registry"`
+	ProductService ProductService `yaml:"product_service"`
+}
+
+type Registry struct {
+	ETCD ETCD `yaml:"etcd"`
+}
+
+type ETCD struct {
+	Address  []string `yaml:"address"`
+	TTL      int      `yaml:"ttl"`
+	Username string   `yaml:"username"`
+	Password string   `yaml:"password"`
 }
 
 type RateLimiter struct {
@@ -72,6 +90,8 @@ type Kitex struct {
 	LogMaxSize      int    `yaml:"log_max_size"`
 	LogMaxBackups   int    `yaml:"log_max_backups"`
 	LogMaxAge       int    `yaml:"log_max_age"`
+	UseK8sDiscovery bool   `yaml:"use_k8s_discovery"`
+	K8sNamespace    string `yaml:"k8s_namespace"`
 }
 
 // GetConf gets configuration instance
@@ -81,11 +101,24 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := os.ReadFile(confFileRelPath)
+	// Try multiple possible config paths
+	possiblePaths := []string{
+		filepath.Join("conf", GetEnv(), "conf.yaml"), // Relative to working dir
+		filepath.Join("app", "cart", "conf", GetEnv(), "conf.yaml"), // Relative to project root
+	}
+
+	var content []byte
+	var err error
+	for _, path := range possiblePaths {
+		content, err = os.ReadFile(path)
+		if err == nil {
+			break
+		}
+		klog.Warnf("failed to read config from %s: %v", path, err)
+	}
+	
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("failed to find config file in any of: %v, last error: %v", possiblePaths, err))
 	}
 	conf = new(Config)
 	err = yaml.Unmarshal(content, conf)

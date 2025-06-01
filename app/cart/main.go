@@ -47,9 +47,15 @@ func main() {
 
 func kitexInit() (opts []server.Option) {
 	// address
-	addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
+	// Use K8s DNS service discovery by default
+	serviceAddr := conf.GetConf().Kitex.Address
+	addr, err := net.ResolveTCPAddr("tcp", serviceAddr)
 	if err != nil {
-		panic(err)
+		// Fallback to direct address if DNS resolution fails
+		addr, err = net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	rateLimitMiddleware := func(next endpoint.Endpoint) endpoint.Endpoint {
