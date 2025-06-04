@@ -45,7 +45,8 @@
 
 在没有进行任何改动，即副本数为1的情况下，输入以下指令测试扩容前的响应时间、QPS等数据：
 
-![hey-test](graphs/hey-test.png)
+
+![origin-hey](graphs/origin-hey.png)
 
 可以看到大部分请求的时长都达到了6.6s以上，并且只有52个成功请求。
 
@@ -57,14 +58,14 @@
 
 ![scaled-hey-test](graphs/scaled-hey-test.png)
 
-可以看到许多请求的时长缩减到了2s左右，平均响应时间从5.0704s下降到了2.3017s，QPS从3.1796提升到了7.6042，成功请求数量从52个提升到了99个。
+可以看到许多请求的时长缩减到了2s左右，平均响应时间从5.0718s下降到了2.2978s，QPS从3.1791提升到了7.7740，成功请求数量从52个提升到了99个。
 
-另外，输入以下指令查询`product`服务中各个pod的日志，检查负载均衡正常工作：
+另外，可以输入以下指令查询`product`服务中各个pod的日志，检查负载均衡正常工作：
 
 ```
 kubectl logs -l app=product --tail=100 --timestamps
 ```
 
-如图可以发现每个副本中都有预期的`ListProductsService:`日志，说明流量已经成功分发到了多个Pod上，负载均衡正常工作：
+如图，可以发现每个副本中都有预期的`ListProductsService`日志，说明流量已经成功分发到了多个Pod上，负载均衡正常工作：
 
 ![multi-pod](graphs/multi-pod.png)
